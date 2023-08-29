@@ -1,10 +1,11 @@
 #include "remote_ai_client.hpp"
 
+RemoteAIClient::~RemoteAIClient()
+{
+}
+
 RemoteAIClient::RemoteAIClient(const char *a_ssid, const char *a_pass)
-: m_wifimulti{}
-, m_client{}
-, m_topics{}
-, m_timer{}
+: m_wifimulti{}, m_client{}, m_topics{}, m_timer{}, m_host{0}, m_port{0}
 {
     m_wifimulti.addAP(a_ssid, a_pass);
     while(m_wifimulti.run() != WL_CONNECTED) {
@@ -26,15 +27,21 @@ void RemoteAIClient::connect_host(const char *host, const uint16_t port)
     }
     m_client.setNoDelay(true);
     
-    String res = wait_for_response(10000);
+    String res = wait_for_response(10);
     Serial.println(res);
-    //m_client.setTimeout(99999);
+    if(port != m_port){
+        strcpy(m_host, host);
+        m_port = port;
+    }
+    if(m_topics.size() > 0){
+        resubscribe_topics();
+    }
 }
 
 void RemoteAIClient::add_topic(String const &a_topic)
 {
     m_client.print("/sub/"+a_topic);
-    wait_for_response(10000);
+    wait_for_response(1000);
     m_topics.push_back(a_topic);
 }
 
@@ -50,6 +57,9 @@ void RemoteAIClient::remove_topic(String const &a_topic)
 
 String RemoteAIClient::wait_for_response(int max_attempts)
 {
+    if(m_client.connected() == 0){
+        connect_host(m_host, m_port);
+    }
     int maxloops=0;
     while (m_client.available() == 0 && maxloops < max_attempts)
     {
@@ -85,4 +95,12 @@ void RemoteAIClient::ping()
 bool RemoteAIClient::is_topic(String &a_topic, String &a_msg)
 {
   return a_msg.startsWith(a_topic);
+}
+
+void RemoteAIClient::resubscribe_topics()
+{
+    for(auto &topic : m_topics){
+        m_client.print("/sub/"+topic);
+        wait_for_response(10);
+    }
 }

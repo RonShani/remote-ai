@@ -12,6 +12,7 @@ void setup()
   rai_client = RemoteAIClient{"Cohen2", "25sep1963"};
   delay(1000);
   rai_client.connect_host("3.235.42.183", 3000);
+  delay(1000);
   rai_client.add_topic("face");
 }
 
@@ -22,11 +23,13 @@ void loop() {
   if (buttonB.isPressed() && !buttonA.isPressed()) {
     plotter.ShowString("elecrow",plotter.blue());
   }
-  String response = rai_client.wait_for_response(1);
+  String response = rai_client.wait_for_response(10);
   if(response.length() > 0){
-    if(response == "face"){
+    if(response.startsWith("face")){
         plotter.draw_smile();
         plotter.show_for_ms(1000);
+    } else {
+      Serial.println(response);
     }
   }
 }
