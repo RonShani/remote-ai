@@ -1,0 +1,61 @@
+#include "vehicle_driver.hpp"
+
+#include <Adafruit_PWMServoDriver.h>
+
+Vehicle::Vehicle(CommunicationManager &a_cmng)
+: m_pwm(a_cmng.pwm())
+, m_front_left(4,3,5, m_pwm)
+, m_front_right(2,1,0, m_pwm)
+, m_rear_left(10,9,11,m_pwm)
+, m_rear_right(8,7,6, m_pwm)
+, m_blink_left(12, m_pwm)
+, m_blink_right(13, m_pwm)
+{
+
+}
+
+void Vehicle::fwd(uint16_t const &a_speed)
+{
+    m_front_left.forth(a_speed);
+    m_front_right.forth(a_speed);
+    m_rear_left.forth(a_speed);
+    m_rear_right.forth(a_speed);
+}
+
+void Vehicle::bwd(uint16_t const &a_speed)
+{
+    m_front_left.back(a_speed);
+    m_front_right.back(a_speed);
+    m_rear_left.back(a_speed);
+    m_rear_right.back(a_speed);
+}
+
+void Vehicle::stop()
+{
+    m_front_left.stop();
+    m_front_right.stop();
+    m_rear_left.stop();
+    m_rear_right.stop();
+}
+
+void Vehicle::blink_left()
+{
+    m_blink_left.on(4095);
+}
+
+void Vehicle::blink_right()
+{
+    m_blink_right.on(4095);
+}
+
+void Vehicle::blink_both()
+{
+    m_blink_left.on(4095);
+    m_blink_right.on(4095);
+}
+
+void Vehicle::blink_stop()
+{
+    m_blink_left.off();
+    m_blink_right.off();
+}

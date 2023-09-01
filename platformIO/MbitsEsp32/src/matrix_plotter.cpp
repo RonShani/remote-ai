@@ -8,6 +8,8 @@
 
 #include <FastLED.h>
 #include "Dots5x5font.h"
+#include "timer.hpp"
+#include <thread>
 
 MatrixPlotter::MatrixPlotter()
 : m_leds{}
@@ -44,10 +46,34 @@ void MatrixPlotter::show_for_ms(int a_ms_delay)
 {
   FastLED.show();
   FastLED.delay(a_ms_delay);
-  FastLED.clear();
-  FastLED.show();
+  clear();
 }
 
+void MatrixPlotter::show_untill(int a_ms_delay)
+{
+  FastLED.show();
+  std::thread{parrallel_show, this, a_ms_delay}.detach();
+}
+
+void MatrixPlotter::clear()
+{
+  FastLED.clear();
+  FastLED.show(); 
+}
+
+void MatrixPlotter::parrallel_show(MatrixPlotter *a_plotter, int a_ms_delay)
+{
+  static Timer timer = Timer{};
+  for(;;){
+    if(timer.is_passed_ms(a_ms_delay)){
+      a_plotter->clear();
+    } else {
+      delay(1);
+      yield();
+    }
+  }
+
+}
 CRGB &MatrixPlotter::green()
 {
   return m_green;

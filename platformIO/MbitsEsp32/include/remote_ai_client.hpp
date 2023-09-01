@@ -9,7 +9,7 @@
 class RemoteAIClient {
 public:
     RemoteAIClient() = default;
-    ~RemoteAIClient();
+    ~RemoteAIClient() = default;
     RemoteAIClient(const char *a_ssid, const char *a_pass);
     void connect_host(const char *host, const uint16_t port);
     void add_topic(String const &a_topic);
@@ -19,6 +19,7 @@ public:
 
 private:  
     bool is_topic(String &a_topic, String &a_msg);
+    bool is_ok(String &a_msg);
     void resubscribe_topics();
 
 private:

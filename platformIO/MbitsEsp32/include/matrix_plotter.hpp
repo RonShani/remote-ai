@@ -18,11 +18,14 @@ public:
     int led(int a_x, int a_y);
     void draw_smile();
     void show_for_ms(int a_ms_delay);
+    void show_untill(int a_ms_delay);
+    void clear();
     CRGB &green();
     CRGB &blue();
 
 private:
     int get_led_index(int a_x, int a_y);
+    static void parrallel_show(MatrixPlotter *a_plotter, int a_ms_delay);
 
 
 private:
