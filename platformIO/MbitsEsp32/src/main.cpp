@@ -1,4 +1,4 @@
-#include <Button.h>
+#include <vector>
 #include "remote_ai_client.hpp"
 #include "matrix_plotter.hpp"
 #include "vehicle_driver.hpp"
@@ -9,28 +9,24 @@ Vehicle car{cm};
 
 RemoteAIClient rai_client;
 MatrixPlotter plotter;
-String topic = "face";
+
+void blink_ok(Vehicle &a_car)
+{
+    a_car.blink_both();
+    delay(500);
+    a_car.blink_stop();
+}
 
 void setup()
 {
-  cm.begin();
   rai_client = RemoteAIClient{"Cohen2", "25sep1963"};
-  delay(1000);
-  rai_client.connect_host("3.237.252.225", 3000);
-  delay(1000);
-  rai_client.add_topic("face");
-  rai_client.add_topic("forward");
-  rai_client.add_topic("backward");
+  rai_client.connect_host("44.203.26.117", 3000);
+  cm.begin();
+  std::vector<String> topics = {"face","forward","backward","left"};
+  rai_client.topic_loader(topics, blink_ok, car);
 }
 
 void loop() {
-  if (buttonA.isPressed() && !buttonB.isPressed()) {
-      plotter.draw_smile();
-      plotter.show_untill(5000);
-  }
-  if (buttonB.isPressed() && !buttonA.isPressed()) {
-    plotter.ShowString("elecrow",plotter.blue());
-  }
   String response = rai_client.wait_for_response(10);
   if(response.length() > 0){
     if(response.startsWith("face")){
@@ -38,30 +34,17 @@ void loop() {
         plotter.show_for_ms(1000);
     }
     else if(response.startsWith("forward")){
-      car.fwd(2048);
+      car.forward(2048);
       delay(1000);
       car.stop();
     }
     else if(response.startsWith("backward")){
-      car.bwd(2048);
+      car.backward(2048);
       delay(1000);
       car.stop();
     }
-    else if(response.compareTo("ok")==0){
-      car.blink_both();
-      delay(500);
-      car.blink_stop();
+    else if(response.startsWith("left")){
+      car.left_turn(400, 2048);
     }
   }
 }
-
-/*
-void loop() {
-  car.fwd(2048);
-  delay(1000);
-  car.stop();
-  delay(1000);
-  car.bwd(2048);
-  delay(1000);
-}
-*/

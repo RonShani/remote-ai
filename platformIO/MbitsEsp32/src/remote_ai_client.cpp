@@ -29,8 +29,8 @@ void RemoteAIClient::connect_host(const char *host, const uint16_t port)
 
 void RemoteAIClient::add_topic(String const &a_topic)
 {
+    
     m_client.print("/sub/"+a_topic);
-    wait_for_response(1000);
     m_topics.push_back(a_topic);
 }
 
@@ -54,6 +54,7 @@ String RemoteAIClient::wait_for_response(int max_attempts)
     {
       maxloops++;
       delay(1);
+      yield();
     }
 
     if (m_client.available() > 0)
@@ -67,13 +68,18 @@ String RemoteAIClient::wait_for_response(int max_attempts)
             return topic;
         }
       }
+      return line;
+      /*
       if(is_ok(line)){
         return "ok";
       } else {
         return {};
       }
+      */
       
     }
+    yield();
+    return {};
 }
 
 void RemoteAIClient::ping()

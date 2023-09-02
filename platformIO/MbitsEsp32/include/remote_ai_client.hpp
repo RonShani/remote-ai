@@ -17,6 +17,9 @@ public:
     String wait_for_response(int max_attempts);
     void ping();
 
+    template <typename Act, typename Context>
+    void topic_loader(std::vector<String> &a_topics, Act a_action, Context &a_context);
+    
 private:  
     bool is_topic(String &a_topic, String &a_msg);
     bool is_ok(String &a_msg);
@@ -30,5 +33,18 @@ private:
     char m_host[20];
     uint16_t m_port;
 };
+
+
+template <typename Act, typename Context>
+void RemoteAIClient::topic_loader(std::vector<String> &a_topics, Act a_action, Context &a_context)
+{
+    for(auto &topic : a_topics){
+        add_topic(topic);
+        String response = wait_for_response(10000);
+        if(is_ok(response)){
+            a_action(a_context);
+        }
+    }
+}
 
 #endif // REMOTE_AI_CLIENT

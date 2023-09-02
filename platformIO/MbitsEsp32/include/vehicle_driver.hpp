@@ -9,9 +9,11 @@
 class Vehicle{
 public:
     Vehicle(CommunicationManager &a_cmng);
-    void fwd(uint16_t const &a_speed);
-    void bwd(uint16_t const &a_speed);
+    void forward(uint16_t const &a_speed);
+    void backward(uint16_t const &a_speed);
     void stop();
+    void left_turn(uint16_t const &a_duration, uint16_t const &a_speed);
+    void right_turn(uint16_t const &a_duration, uint16_t const &a_speed);
     void blink_left();
     void blink_right();
     void blink_both();

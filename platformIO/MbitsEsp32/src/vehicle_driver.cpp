@@ -14,7 +14,7 @@ Vehicle::Vehicle(CommunicationManager &a_cmng)
 
 }
 
-void Vehicle::fwd(uint16_t const &a_speed)
+void Vehicle::forward(uint16_t const &a_speed)
 {
     m_front_left.forth(a_speed);
     m_front_right.forth(a_speed);
@@ -22,12 +22,32 @@ void Vehicle::fwd(uint16_t const &a_speed)
     m_rear_right.forth(a_speed);
 }
 
-void Vehicle::bwd(uint16_t const &a_speed)
+void Vehicle::backward(uint16_t const &a_speed)
 {
     m_front_left.back(a_speed);
     m_front_right.back(a_speed);
     m_rear_left.back(a_speed);
     m_rear_right.back(a_speed);
+}
+
+void Vehicle::left_turn(uint16_t const &a_duration, uint16_t const &a_speed)
+{
+    m_front_left.back(a_speed);
+    m_rear_left.back(a_speed);
+    m_front_right.forth(a_speed);
+    m_rear_right.forth(a_speed);
+    delay(a_duration);
+    stop();
+}
+
+void Vehicle::right_turn(uint16_t const &a_duration, uint16_t const &a_speed)
+{
+    m_front_left.forth(a_speed);
+    m_rear_left.forth(a_speed);
+    m_front_right.back(a_speed);
+    m_rear_right.back(a_speed);
+    delay(a_duration);
+    stop();
 }
 
 void Vehicle::stop()
