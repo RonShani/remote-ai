@@ -22,6 +22,7 @@ public:
     void clear();
     CRGB &green();
     CRGB &blue();
+    static void face(MatrixPlotter &a_plotter);
 
 private:
     int get_led_index(int a_x, int a_y);

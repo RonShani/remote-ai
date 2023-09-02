@@ -148,3 +148,9 @@ void MatrixPlotter::ShowString(String sMessage,CRGB myRGBcolor) {
     }
   }
 }
+
+void MatrixPlotter::face(MatrixPlotter &a_plotter)
+{
+  a_plotter.draw_smile();
+  a_plotter.show_for_ms(1000);
+}

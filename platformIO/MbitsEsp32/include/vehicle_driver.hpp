@@ -19,6 +19,12 @@ public:
     void blink_both();
     void blink_stop();
 
+public:
+    static void turn_left(Vehicle &a_car);
+    static void go_backward(Vehicle &a_car);
+    static void go_forward(Vehicle &a_car);
+    static void blink_ok(Vehicle &a_car);
+
 private:
     Adafruit_PWMServoDriver &m_pwm;
     MotorDriver m_front_left;

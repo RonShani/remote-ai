@@ -79,3 +79,30 @@ void Vehicle::blink_stop()
     m_blink_left.off();
     m_blink_right.off();
 }
+
+
+void Vehicle::blink_ok(Vehicle &a_car)
+{
+    a_car.blink_both();
+    delay(500);
+    a_car.blink_stop();
+}
+
+void Vehicle::go_forward(Vehicle &a_car)
+{
+  a_car.forward(2048);
+  delay(1000);
+  a_car.stop();
+}
+
+void Vehicle::go_backward(Vehicle &a_car)
+{
+  a_car.backward(2048);
+  delay(1000);
+  a_car.stop();
+}
+
+void Vehicle::turn_left(Vehicle &a_car)
+{
+  a_car.left_turn(400, 2048);
+}
